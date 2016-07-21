@@ -21,3 +21,4 @@ class SameAccountTransaction(BaseException):
 
 class ExecutedTransaction(BaseException):
     pass
+

@@ -66,7 +66,7 @@ class Account:
 class Transaction:
     def __init__(self, sender, sender_account, receiver, receiver_account, amount):
         if sender not in sender_account.holders or receiver not in receiver_account.holders:
-            raise NotHolder('the client has to be a holder of the account')
+            raise NotHolder('the clients has to be holders of the corresponding accounts')
         if sender_account == receiver_account:
             raise SameAccountTransaction('the sender account and the receiver account have to be different')
         amount = _convert_amount(amount)

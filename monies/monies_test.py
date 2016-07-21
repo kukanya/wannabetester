@@ -1,7 +1,7 @@
 r"""
 >>> from importlib import reload
 
-We should be able to create a client
+It is be possible to create a client object.
 >>> import monies.monies_main as monies_main
 >>> Anastasia = monies_main.Client(first_name='Anastasia', last_name='Kukanova')
 >>> Anastasia.first_name
@@ -11,7 +11,7 @@ We should be able to create a client
 >>> Anastasia.accessible_accounts
 []
 
-Creating a client with no personal data is invalid
+Creating a client object with no first name or no last name is invalid.
 >>> monies_main = reload(monies_main)
 >>> client1 = monies_main.Client(first_name='Nope')
 Traceback (most recent call last):
@@ -29,7 +29,9 @@ monies.monies_exc.InvalidClientName: a client must have a first name and a last 
 Traceback (most recent call last):
 monies.monies_exc.InvalidClientName: a client must have a first name and a last name
 
-We should be able to create a bank account with one client having access to it.
+It is be possible to create a bank account with exactly one client having access to it.
+Adding more account holders is implemented as a method.
+Balance is stored as a number with a fixed point.
 >>> monies_main = reload(monies_main)
 >>> Anastasia = monies_main.Client(first_name='Anastasia', last_name='Kukanova')
 >>> Anastasia.accessible_accounts
@@ -49,14 +51,15 @@ True
 >>> str(account1.balance)
 '0.00'
 
-Creating an account without a holder is invalid
+Creating an account without a holder is invalid.
 >>> monies_main = reload(monies_main)
 >>> account1 = monies_main.Account()
 Traceback (most recent call last):
 monies.monies_exc.ZeroHolders: an account must have at least one holder
 
-A client should be able to deposit money to an accessible account
-Integer input
+
+A client can deposit money to an accessible account.
+The deposit amount input can be of `int` type.
 >>> monies_main = reload(monies_main)
 >>> Anastasia = monies_main.Client(first_name='Anastasia', last_name='Kukanova')
 >>> account1 = monies_main.Account(holder=Anastasia)
@@ -69,7 +72,7 @@ True
 >>> str(account1.balance)
 '1000.00'
 
-Float input
+It can also be of `float` type.
 >>> monies_main = reload(monies_main)
 >>> Anastasia = monies_main.Client(first_name='Anastasia', last_name='Kukanova')
 >>> account1 = monies_main.Account(holder=Anastasia)
@@ -82,7 +85,7 @@ True
 >>> str(account1.balance)
 '1000.00'
 
-Deposit amount has to be 0.01 or more
+Deposit amount has to be 0.01 or more.
 >>> monies_main = reload(monies_main)
 >>> Anastasia = monies_main.Client(first_name='Anastasia', last_name='Kukanova')
 >>> account1 = monies_main.Account(holder=Anastasia)
@@ -90,7 +93,7 @@ Deposit amount has to be 0.01 or more
 Traceback (most recent call last):
 monies.monies_exc.MinimalAmountNotMet: minimal deposit amount is 0.01
 
-Only a holder should be able to deposit money to the account
+Only a holder can deposit money to the account.
 >>> monies_main = reload(monies_main)
 >>> Anastasia = monies_main.Client(first_name='Anastasia', last_name='Kukanova')
 >>> account1 = monies_main.Account(holder=Anastasia)
@@ -99,8 +102,8 @@ Only a holder should be able to deposit money to the account
 Traceback (most recent call last):
 monies.monies_exc.NotHolder: the client has to be a holder of the account
 
-A client should be able to withdraw money from an accessible account:
-Integer input
+A client can withdraw money from an accessible account.
+The withdrawal amount input can be of `int` type.
 >>> monies_main = reload(monies_main)
 >>> Anastasia = monies_main.Client(first_name='Anastasia', last_name='Kukanova')
 >>> account1 = monies_main.Account(holder=Anastasia)
@@ -114,7 +117,7 @@ True
 >>> str(account1.balance)
 '500.00'
 
-Float input
+It can also be of `float` type.
 >>> monies_main = reload(monies_main)
 >>> Anastasia = monies_main.Client(first_name='Anastasia', last_name='Kukanova')
 >>> account1 = monies_main.Account(holder=Anastasia)
@@ -128,7 +131,7 @@ True
 >>> str(account1.balance)
 '500.00'
 
-Withdrawal amount has to be 0.01 or more
+Withdrawal amount has to be 0.01 or more.
 >>> monies_main = reload(monies_main)
 >>> Anastasia = monies_main.Client(first_name='Anastasia', last_name='Kukanova')
 >>> account1 = monies_main.Account(holder=Anastasia)
@@ -137,7 +140,7 @@ Withdrawal amount has to be 0.01 or more
 Traceback (most recent call last):
 monies.monies_exc.MinimalAmountNotMet: minimal withdrawal amount is 0.01
 
-A client can't withdraw more money than there is in the account
+A holder can't withdraw more money than the account stores.
 >>> monies_main = reload(monies_main)
 >>> Anastasia = monies_main.Client(first_name='Anastasia', last_name='Kukanova')
 >>> account1 = monies_main.Account(holder=Anastasia)
@@ -145,7 +148,7 @@ A client can't withdraw more money than there is in the account
 Traceback (most recent call last):
 monies.monies_exc.BalanceExceeded: amount of withdrawal cannot exceed the balance of the account
 
-The client has to be a holder of the account
+Only a holder can withdraw money from the account.
 >>> monies_main = reload(monies_main)
 >>> Anastasia = monies_main.Client(first_name='Anastasia', last_name='Kukanova')
 >>> account1 = monies_main.Account(holder=Anastasia)
@@ -155,7 +158,7 @@ The client has to be a holder of the account
 Traceback (most recent call last):
 monies.monies_exc.NotHolder: the client has to be a holder of the account
 
-It should be possible to add another holder to the account
+It is possible to add another holder to an account.
 >>> monies_main = reload(monies_main)
 >>> Anastasia = monies_main.Client(first_name='Anastasia', last_name='Kukanova')
 >>> account1 = monies_main.Account(holder=Anastasia)
@@ -174,7 +177,7 @@ It should be possible to add another holder to the account
 >>> len(Maria.accessible_accounts)
 1
 
-If the client is already a holder of the account, he shouldn't be added again
+If the client is already a holder of the account, he will not added again.
 >>> monies_main = reload(monies_main)
 >>> Anastasia = monies_main.Client(first_name='Anastasia', last_name='Kukanova')
 >>> account1 = monies_main.Account(holder=Anastasia)
@@ -182,7 +185,7 @@ If the client is already a holder of the account, he shouldn't be added again
 Traceback (most recent call last):
 monies.monies_exc.AlreadyHolder: the client is already a holder of the account
 
-We should be able to remove a holder of an account.
+It is possible to remove a holder of an account.
 >>> monies_main = reload(monies_main)
 >>> Anastasia = monies_main.Client(first_name='Anastasia', last_name='Kukanova')
 >>> account1 = monies_main.Account(holder=Anastasia)
@@ -194,7 +197,7 @@ We should be able to remove a holder of an account.
 >>> len(account1.holders)
 1
 
-We shouldn't be able to remove the last holder of the account.
+However, it is not to remove the last holder of the account.
 >>> monies_main = reload(monies_main)
 >>> Anastasia = monies_main.Client(first_name='Anastasia', last_name='Kukanova')
 >>> account1 = monies_main.Account(holder=Anastasia)
@@ -204,7 +207,7 @@ We shouldn't be able to remove the last holder of the account.
 Traceback (most recent call last):
 monies.monies_exc.ZeroHolders: an account must have at least one holder
 
-If the client is not a holder the account, he cannot be removed
+If the client is not a holder the account, he cannot be removed.
 >>> monies_main = reload(monies_main)
 >>> Anastasia = monies_main.Client(first_name='Anastasia', last_name='Kukanova')
 >>> account1 = monies_main.Account(holder=Anastasia)
@@ -213,8 +216,8 @@ If the client is not a holder the account, he cannot be removed
 Traceback (most recent call last):
 monies.monies_exc.NotHolder: the client is not a holder of the account
 
-We should be able to create a valid transaction.
-Integer amount input
+It is possible to create a valid transaction.
+The transaction amount input can be of `int` type.
 >>> monies_main = reload(monies_main)
 >>> Anastasia = monies_main.Client(first_name='Anastasia', last_name='Kukanova')
 >>> account1 = monies_main.Account(holder=Anastasia)
@@ -227,7 +230,7 @@ Integer amount input
 >>> transaction1.is_executed
 False
 
-Float amount input
+It can also be of `float` type.
 >>> monies_main = reload(monies_main)
 >>> Anastasia = monies_main.Client(first_name='Anastasia', last_name='Kukanova')
 >>> account1 = monies_main.Account(holder=Anastasia)
@@ -250,7 +253,7 @@ The clients have to be holders of the corresponding accounts.
 ...                                   receiver=Maria, receiver_account=account2,
 ...                                   amount=500)
 Traceback (most recent call last):
-monies.monies_exc.NotHolder: the client has to be a holder of the account
+monies.monies_exc.NotHolder: the clients has to be holders of the corresponding accounts
 
 >>> monies_main = reload(monies_main)
 >>> Anastasia = monies_main.Client(first_name='Anastasia', last_name='Kukanova')
@@ -261,9 +264,9 @@ monies.monies_exc.NotHolder: the client has to be a holder of the account
 ...                                   receiver=Maria, receiver_account=account2,
 ...                                   amount=500)
 Traceback (most recent call last):
-monies.monies_exc.NotHolder: the client has to be a holder of the account
+monies.monies_exc.NotHolder: the clients has to be holders of the corresponding accounts
 
-Sender account and receiver account have to be different.
+The sender account and the receiver account have to be different.
 >>> monies_main = reload(monies_main)
 >>> Anastasia = monies_main.Client(first_name='Anastasia', last_name='Kukanova')
 >>> account1 = monies_main.Account(holder=Anastasia)
@@ -275,7 +278,7 @@ Sender account and receiver account have to be different.
 Traceback (most recent call last):
 monies.monies_exc.SameAccountTransaction: the sender account and the receiver account have to be different
 
-The amount of transaction has to be 0.01 or more
+The amount of transaction has to be 0.01 or more.
 >>> monies_main = reload(monies_main)
 >>> Anastasia = monies_main.Client(first_name='Anastasia', last_name='Kukanova')
 >>> account1 = monies_main.Account(holder=Anastasia)
@@ -288,7 +291,7 @@ The amount of transaction has to be 0.01 or more
 Traceback (most recent call last):
 monies.monies_exc.MinimalAmountNotMet: minimal transaction amount is 0.01
 
-The amount of transaction can't exceed the balance of the sender account
+The amount of transaction cannot exceed the balance of the sender account.
 >>> monies_main = reload(monies_main)
 >>> Anastasia = monies_main.Client(first_name='Anastasia', last_name='Kukanova')
 >>> account1 = monies_main.Account(holder=Anastasia)
@@ -301,7 +304,7 @@ The amount of transaction can't exceed the balance of the sender account
 Traceback (most recent call last):
 monies.monies_exc.BalanceExceeded: amount of transaction cannot exceed the balance of the sender account
 
-A valid transaction should be able to be executed
+A valid transaction can be executed.
 >>> monies_main = reload(monies_main)
 >>> Anastasia = monies_main.Client(first_name='Anastasia', last_name='Kukanova')
 >>> account1 = monies_main.Account(holder=Anastasia)
@@ -323,7 +326,7 @@ A valid transaction should be able to be executed
 >>> transaction1.is_executed
 True
 
-An executed transaction cannot be executed again
+An executed transaction cannot be executed again.
 >>> monies_main = reload(monies_main)
 >>> Anastasia = monies_main.Client(first_name='Anastasia', last_name='Kukanova')
 >>> account1 = monies_main.Account(holder=Anastasia)
