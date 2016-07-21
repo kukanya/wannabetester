@@ -1,0 +1,13 @@
+The library consists of three classes, one representing bank accounts,
+one representing people, and one representing monetary transactions.
+Person objects should be able to draw on zero or more accounts,
+and account objects should be accessible to one or more people.
+Transactions should represent the transfer of a certain amount of
+money between one person and another, by transferring the money from
+an account accessible by the first person to an account accessible by
+the second.
+Attempts to create invalid transactions should fail.
+After having been created, it should be possible to execute a
+transaction to perform the actual transfer between accounts.
+All monies should be represented as fixed point numbers, not floating
+point.
